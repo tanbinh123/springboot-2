@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yangyjxmspringboot.dao.WeappMapper">
+
+    <!--  新增树洞  -->
+    <insert id="addTreehole" parameterType="Treehole">
+        INSERT INTO treehole_info (
+            userid,
+            contentType,
+            content,
+            time
+        )
+        VALUES
+            (#{userid},#{contentType},#{content},#{time})
+    </insert>
+
+    <!--  查询树洞  -->
+    <select id="queryTreeholeList" resultType="Treehole">
+        select * from treehole_info where 1=1
+<!--        <if test="status != null and status != ''">-->
+<!--            and status = #{status}-->
+<!--        </if>-->
+    </select>
+
+    <!--  新增定位信息  -->
+    <insert id="addLocation" parameterType="Loan">
+        INSERT INTO location_info (
+            country,
+            province,
+            city,
+            address,
+            date,
+            user
+        )
+        VALUES
+            (#{country},#{province},#{city},#{address},#{date},#{user})
+    </insert>
+
+    <!--  统计定位信息  -->
+    <select id="countLocation" resultType="map">
+        SELECT province as 'name',COUNT(*) as 'value' FROM location_info GROUP BY province
+    </select>
+
+    <!--  新增贷款  -->
+    <insert id="addLoan" parameterType="Loan">
+        INSERT INTO loan_info (
+            title,
+            details,
+            status,
+            createTime,
+            createBy
+        )
+        VALUES
+            (#{title},#{details},#{status},#{createTime},#{createBy})
+    </insert>
+
+    <!--  查询贷款  -->
+    <resultMap id="queryLoanList" type="loan">
+        <result property="title" column="title" />
+        <result property="details" column="details" />
+        <result property="status" column="status" />
+        <result property="details" column="details" />
+        <result property="createTime" column="createTime" />
+        <result property="completeTime" column="completeTime" />
+    </resultMap>
+    <select id="queryLoanList" resultMap="queryLoanList">
+        select * from loan_info where status != 2
+        <if test="status != null and status != ''">
+            and status = #{status}
+        </if>
+    </select>
+
+    <!--  删除贷款  -->
+    <insert id="deleteLoan" parameterType="Loan">
+        DELETE FROM loan_info WHERE 1=1
+        <if test="title != null and title != ''">
+            and title = #{title}
+        </if>
+    </insert>
+
+    <!--  更新贷款状态  -->
+    <update id="updateLoan" parameterType="Loan">
+        UPDATE loan_info SET status = #{status}, completeTime = #{completeTime} WHERE title = #{title}
+    </update>
+
+    <!--  统计贷款状态数量  -->
+    <select id="countLoan" resultType="map">
+        SELECT STATUS,COUNT(*) as 'number' FROM loan_info GROUP BY STATUS
+    </select>
+
+
+</mapper>

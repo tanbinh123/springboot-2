@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yangyjxmspringboot.dao.UserMapper">
+
+<!--    <resultMap id="User" type="User">-->
+<!--        <result column="id" jdbcType="INTEGER" property="id" />-->
+<!--        <result column="userName" jdbcType="VARCHAR" property="userName" />-->
+<!--        <result column="passWord" jdbcType="VARCHAR" property="passWord" />-->
+<!--        <result column="realName" jdbcType="VARCHAR" property="realName" />-->
+<!--    </resultMap>-->
+
+<!--    <select id="getUser" resultType="User">-->
+<!--        select * from user limit 1-->
+<!--    </select>-->
+
+    <select id="getUserNumber" resultType="int">
+        select count(*) from user
+    </select>
+
+    <insert id="addNewUser" parameterType="User">
+        insert into user(user_name,password) values (#{user_name},#{password})
+    </insert>
+
+    <select id="login" resultType="string">
+        select password from user where user_name = #{user_name}
+    </select>
+
+    <!--  查询代码表  -->
+    <resultMap id="code" type="code">
+        <result property="value" column="value" />
+        <result property="type" column="type" />
+    </resultMap>
+    <select id="code" resultMap="code">
+        select * from rc_code where 1=1
+        <if test="type != null and type != ''">
+            and type like "%"#{type}"%"
+        </if>
+    </select>
+
+    <!--  删除代码表  -->
+    <delete id="deleteCode" parameterType="code">
+        DELETE FROM rc_code where type = #{type} and value = #{value}
+    </delete>
+
+    <!--  新增代码表  -->
+    <insert id="addCode" parameterType="code">
+        insert into rc_code(type,value) values (#{type},#{value})
+    </insert>
+</mapper>
